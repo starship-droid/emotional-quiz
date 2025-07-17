@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotional Intelligence Quiz</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .quiz-content {
+            padding: 40px 30px;
+        }
+        
+        .question {
+            margin-bottom: 30px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border-left: 5px solid #4facfe;
+            transition: transform 0.2s ease;
+        }
+        
+        .question:hover {
+            transform: translateY(-2px);
+        }
+        
+        .question h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+            line-height: 1.4;
+        }
+        
+        .question-number {
+            display: inline-block;
+            background: #4facfe;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 0.9em;
+        }
+        
+        .options {
+            display: grid;
+            gap: 10px;
+        }
+        
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .option:hover {
+            border-color: #4facfe;
+            background: #f0f8ff;
+        }
+        
+        .option input[type="radio"] {
+            margin-right: 15px;
+            transform: scale(1.2);
+            accent-color: #4facfe;
+        }
+        
+        .option label {
+            cursor: pointer;
+            font-size: 1em;
+            line-height: 1.4;
+            flex: 1;
+        }
+        
+        .trait-tag {
+            display: inline-block;
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1em;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.3);
+            margin: 30px auto;
+            display: block;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79, 172, 254, 0.4);
+        }
+        
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .results {
+            display: none;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .results.show {
+            display: block;
+        }
+        
+        .score-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .score-high { background: linear-gradient(135deg, #4CAF50, #45a049); }
+        .score-medium { background: linear-gradient(135deg, #FF9800, #f57c00); }
+        .score-low { background: linear-gradient(135deg, #f44336, #d32f2f); }
+        
+        .results h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+        }
+        
+        .results p {
+            color: #666;
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .disclaimer {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 30px 0;
+            color: #856404;
+            font-style: italic;
+            text-align: center;
+        }
+        
+        .reset-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background 0.3s ease;
+        }
+        
+        .reset-btn:hover {
+            background: #5a6268;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .header {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .quiz-content {
+                padding: 30px 20px;
+            }
+            
+            .question {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Emotional Intelligence Quiz</h1>
+            <p>Discover your EI strengths across self-awareness, empathy, and social skills</p>
+        </div>
+        
+        <div class="quiz-content">
+            <div class="disclaimer">
+                <strong>Note:</strong> This quiz is for informal self-assessment and is not diagnostic. It provides insights into emotional intelligence tendencies across key domains.
+            </div>
+            
+            <form id="quizForm">
+                <div class="question">
+                    <h3><span class="question-number">1</span>You receive critical feedback from a colleague. How do you typically respond?</h3>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="q1" value="1" id="q1a">
+                            <label for="q1a">I get defensive and explain why they're wrong.</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q1" value="2" id="q1b">
+                            <label for="q1b">I ignore it and move on.</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q1" value="4" id="q1c">
+                            <label for="q1c">I reflect on it and consider what I can improve.</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q1" value="1" id="q1d">
+                            <label for="q1d">I get upset and avoid the person.</label>
+                        </div>
+                    </div>
+                    <div class="trait-tag">Self-awareness, Self-regulation</div>
+                </div>
+
+                <div class="question">
+                    <h3><span class="question-number">2</span>A friend is visibly upset but says "I'm fine." What do you do?</h3>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="q2" value="2" id="q2a">
+                            <label for="q2a">Take their word and drop it.</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q2" value="4" id="q2b">
+                            <label for="q2b">Ask again gently and give them space to talk.</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q2" value="1" id="q2c">
+                            <label for="q2c">Change the subject to distract them.</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q2" value="1" id="q2d">
+                            <label for="q2d">Tell them they're obviously not fine.</label>
+                        </div>
+                    </div>
+                    <div class="trait-tag">Empathy, Social Awareness</div>
+                </div>
+
+                <div class="question">
+                    <h3><span class="question-number">3</span>When working in a team, what is your priority?</h3>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="q3" value="1" id="q3a">
+                            <label for="q3a">Making sure I look good to superiors.</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q3" value="4" id="q3b">
+                            <label for="q3b">Making sure everyone feels heard and involved.</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q3" value="2" id="q3c">
+                            <label for="q3c">Finishing the task as fast as possible.</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q3" value="1" id="q3d">
+                            <label for="q3d">Avoiding conflict at all costs.</label>
+                        </div>
+                    </div>
+                    <div class="trait-tag">Social Skills, Teamwork</div>
+                </div>
+
+                <div class="question">
+                    <h3><span class="question-number">4</span>You make a mistake at work. What is your first reaction?</h3>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="q4" value="1" id="q4a">
+                            <label for="q4a">Blame external circumstances or someone else.</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q4" value="2" id="q4b">
+                            <label for="q4b">Try to hide it.</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q4" value="4" id="q4c">
+                            <label for="q4c">Own up to it and find a way to fix it.</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q4" value="1" id="q4d">
+                            <label for="q4d">Stress out and freeze.</label>
+                        </div>
+                    </div>
+                    <div class="trait-tag">Self-awareness, Accountability</div>
+                </div>
+
+                <div class="question">
+                    <h3><span class="question-number">5</span>How often do you reflect on your emotional responses?</h3>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="q5" value="1" id="q5a">
+                            <label for="q5a">Rarely—I just react.</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q5" value="2" id="q5b">
+                            <label for="q5b">Sometimes, if something major happens.</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q5" value="4" id="q5c">
+                            <label for="q5c">Often—I try to learn from emotional experiences.</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q5" value="1" id="q5d">
+                            <label for="q5d">Never—it's a waste of time.</label>
+                        </div>
+                    </div>
+                    <div class="trait-tag">Self-awareness</div>
+                </div>
+
+                <div class="question">
+                    <h3><span class="question-number">6</span>Someone is angry and yelling. How do you react?</h3>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="q6" value="1" id="q6a">
+                            <label for="q6a">Yell back—they started it.</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q6" value="4" id="q6b">
+                            <label for="q6b">Stay calm and try to de-escalate.</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q6" value="2" id="q6c">
+                            <label for="q6c">Walk away immediately.</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q6" value="1" id="q6d">
+                            <label for="q6d">Get anxious and say nothing.</label>
+                        </div>
+                    </div>
+                    <div class="trait-tag">Self-regulation, Conflict Management</div>
+                </div>
+
+                <div class="question">
+                    <h3><span class="question-number">7</span>When a coworker gets praised for something you contributed to, how do you feel?</h3>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="q7" value="1" id="q7a">
+                            <label for="q7a">Jealous and resentful.</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q7" value="4" id="q7b">
+                            <label for="q7b">Proud that the team succeeded.</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q7" value="2" id="q7c">
+                            <label for="q7c">Hurt, and I plan to bring it up.</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q7" value="2" id="q7d">
+                            <label for="q7d">Indifferent—it's not a big deal.</label>
+                        </div>
+                    </div>
+                    <div class="trait-tag">Self-awareness, Empathy</div>
+                </div>
+
+                <div class="question">
+                    <h3><span class="question-number">8</span>How do you motivate yourself during difficult times?</h3>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="q8" value="1" id="q8a">
+                            <label for="q8a">I don't—I procrastinate.</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q8" value="2" id="q8b">
+                            <label for="q8b">I rely on others to push me.</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q8" value="4" id="q8c">
+                            <label for="q8c">I remind myself of my goals and take small steps.</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q8" value="1" id="q8d">
+                            <label for="q8d">I give up until it gets easier.</label>
+                        </div>
+                    </div>
+                    <div class="trait-tag">Self-motivation</div>
+                </div>
+
+                <div class="question">
+                    <h3><span class="question-number">9</span>A friend disagrees strongly with your opinion. What do you do?</h3>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="q9" value="1" id="q9a">
+                            <label for="q9a">Argue until they see your point.</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q9" value="2" id="q9b">
+                            <label for="q9b">Shut down the conversation.</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q9" value="4" id="q9c">
+                            <label for="q9c">Listen openly and ask why they feel that way.</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q9" value="1" id="q9d">
+                            <label for="q9d">Laugh it off and change the topic.</label>
+                        </div>
+                    </div>
+                    <div class="trait-tag">Empathy, Respect for Others</div>
+                </div>
+
+                <div class="question">
+                    <h3><span class="question-number">10</span>How well do you understand what triggers your emotional reactions?</h3>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="q10" value="1" id="q10a">
+                            <label for="q10a">I'm often surprised by how I feel.</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q10" value="2" id="q10b">
+                            <label for="q10b">I understand sometimes, but not always.</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q10" value="4" id="q10c">
+                            <label for="q10c">I'm usually aware of the cause of my emotions.</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q10" value="1" id="q10d">
+                            <label for="q10d">I don't think about that kind of thing.</label>
+                        </div>
+                    </div>
+                    <div class="trait-tag">Self-awareness</div>
+                </div>
+
+                <button type="submit" class="submit-btn">Calculate My EI Score</button>
+            </form>
+
+            <div class="results" id="results">
+                <div class="score-circle" id="scoreCircle">
+                    <span id="scoreText">0/40</span>
+                </div>
+                <h2 id="resultTitle">Your EI Level</h2>
+                <p id="resultDescription">Your emotional intelligence assessment result will appear here.</p>
+                <button type="button" class="reset-btn" onclick="resetQuiz()">Take Quiz Again</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('quizForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Check if all questions are answered
+            const questions = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10'];
+            let allAnswered = true;
+            
+            for (let question of questions) {
+                const checked = document.querySelector(`input[name="${question}"]:checked`);
+                if (!checked) {
+                    allAnswered = false;
+                    break;
+                }
+            }
+            
+            if (!allAnswered) {
+                alert('Please answer all questions before submitting.');
+                return;
+            }
+            
+            // Calculate score
+            let totalScore = 0;
+            for (let question of questions) {
+                const checked = document.querySelector(`input[name="${question}"]:checked`);
+                if (checked) {
+                    totalScore += parseInt(checked.value);
+                }
+            }
+            
+            // Display results
+            displayResults(totalScore);
+        });
+        
+        function displayResults(score) {
+            const resultsDiv = document.getElementById('results');
+            const scoreCircle = document.getElementById('scoreCircle');
+            const scoreText = document.getElementById('scoreText');
+            const resultTitle = document.getElementById('resultTitle');
+            const resultDescription = document.getElementById('resultDescription');
+            
+            scoreText.textContent = `${score}/40`;
+            
+            let level, description, circleClass;
+            
+            if (score >= 32) {
+                level = 'High Emotional Intelligence';
+                description = 'Excellent! You demonstrate strong emotional intelligence across multiple domains. You\'re likely self-aware, empathetic, and skilled at managing relationships and emotions effectively. Continue developing these strengths.';
+                circleClass = 'score-high';
+            } else if (score >= 24) {
+                level = 'Moderate Emotional Intelligence';
+                description = 'Good work! You show solid emotional intelligence with room for growth. Focus on areas where you scored lower, such as self-awareness, empathy, or emotional regulation. Practice mindfulness and active listening.';
+                circleClass = 'score-medium';
+            } else {
+                level = 'Developing Emotional Intelligence';
+                description = 'You\'re on a journey of emotional growth! Consider focusing on self-reflection, understanding your emotional triggers, and practicing empathy. Small daily improvements in emotional awareness can lead to significant positive changes.';
+                circleClass = 'score-low';
+            }
+            
+            resultTitle.textContent = level;
+            resultDescription.textContent = description;
+            
+            scoreCircle.className = `score-circle ${circleClass}`;
+            resultsDiv.classList.add('show');
+            
+            // Scroll to results
+            resultsDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function resetQuiz() {
+            const form = document.getElementById('quizForm');
+            const results = document.getElementById('results');
+            
+            form.reset();
+            results.classList.remove('show');
+            
+            // Scroll to top
+            document.querySelector('.header').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Add some interactive effects
+        document.addEventListener('DOMContentLoaded', function() {
+            const options = document.querySelectorAll('.option');
+            
+            options.forEach(option => {
+                option.addEventListener('click', function() {
+                    const radio = this.querySelector('input[type="radio"]');
+                    radio.checked = true;
+                    
+                    // Remove selection from other options in the same question
+                    const questionOptions = this.closest('.question').querySelectorAll('.option');
+                    questionOptions.forEach(opt => {
+                        opt.style.background = '';
+                        opt.style.borderColor = '';
+                    });
+                    
+                    // Highlight selected option
+                    this.style.background = '#e3f2fd';
+                    this.style.borderColor = '#1976d2';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
